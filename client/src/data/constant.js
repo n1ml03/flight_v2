@@ -1,0 +1,1 @@
+export const suggestions = ['BOM','DEL','BLR','HYD','CCU','MAA'];
