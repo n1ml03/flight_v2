@@ -57,8 +57,7 @@ const Search = () => {
 
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
-    adult: 1,
-    minor: 0,
+    adult: 1
   });
 
   // Handle changing options for adults and minors
@@ -138,17 +137,19 @@ const Search = () => {
             )}
           </div>
 
-          <div className="flex w-full h-full justify-start items-center border-[1px] border-[#CBD4E6] p-2">
+          <div className="flex w-full h-full justify-start items-center border-[1px] border-[#CBD4E6] p-2"
+          onMouseEnter={() => setOpenDate(true)}
+          onMouseLeave={() => setOpenDate(false)}
+          >
             <img src={calendar} alt="calendar" />
             <span
               className="text-[#7C8DB0] text-base leading-6 ml-2 cursor-pointer"
               onClick={() => setOpenDate(!openDate)}
             >
-              {openDate
-                ? `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(
-                    date[0].endDate,
-                    "dd/MM/yyyy"
-                  )}` : "Depart to Return"}
+              {openDate ? (
+                `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate, "dd/MM/yyyy")}`
+                  ) : `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate, "dd/MM/yyyy")}`}
+
             </span>
             <div
               className="" onMouseLeave={() => setOpenDate(false)}></div>
@@ -166,10 +167,10 @@ const Search = () => {
           <div className="flex w-full h-full justify-start items-center border-[1px] border-[#CBD4E6]  p-2">
             <img src={person} alt="person" />
             <span
-              className="text-[#7C8DB0] text-base leading-6 ml-2 cursor-pointer"
+              className="text-[#7C8DB0] text-base leading-6 ml-2 cursor-pointer "
               onClick={() => setOpenOptions(!openOptions)}
             >
-              {`${options.adult} Adult - ${options.minor} Minor `}
+              {`${options.adult} Adult`}
             </span>
             {openOptions && (
               <div className="w-52 h-fit flex flex-col gap-4 rounded-md bg-white shadowCard absolute lg:top-[70px] top-64 p-4 z-10">
@@ -179,7 +180,7 @@ const Search = () => {
                   </span>
                   <div className="flex items-center gap-4">
                     <button
-                      className="border-2 border-[#605DEC] px-2 text-[#7C8DB0] disabled:cursor-not-allowed"
+                      className="  border-2 border-[#605DEC] px-2 text-[#7C8DB0] disabled:cursor-not-allowed"
                       onClick={() => handleOptions("adult", "d")}
                       disabled={options.adult <= 1}
                     >
@@ -194,7 +195,7 @@ const Search = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
+                {/* <div className="flex justify-between items-center">
                   <span className="text-[#7C8DB0] text-base leading-6">
                     Minors:
                   </span>
@@ -214,7 +215,7 @@ const Search = () => {
                       +
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
           </div>
