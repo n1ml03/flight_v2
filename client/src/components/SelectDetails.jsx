@@ -6,12 +6,48 @@ import "react-date-range/dist/theme/default.css";
 import { format } from "date-fns";
 import { useState } from "react";
 
+
+// Custom hook for handling auto-suggestions
+const AutoSuggest = () => {
+  const [input, setInput] = useState('');
+  const [matchingSuggestions, setMatchingSuggestions] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Handle user input and filter matching suggestions
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+    setInput(inputValue);
+
+    const filteredSuggestions = suggestions.filter((suggestion) =>
+      suggestion.toLowerCase().startsWith(inputValue)
+    );
+    setMatchingSuggestions(filteredSuggestions);
+  };
+
+  // Handle clicking on a suggestion
+  const handleSuggestionClick = (suggestion) => {
+    setInput(suggestion);
+    setIsOpen(false);
+  };
+
+  return {
+    input,
+    matchingSuggestions,
+    isOpen,
+    setInput,
+    setIsOpen,
+    handleInputChange,
+    handleSuggestionClick,
+  };
+}
+
+
 const SelectDetails = () => {
   const [openDate, setOpenDate] = useState(false);
   const [date, setDate] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: new Date("2022-01-01"),
+      endDate: new Date("2022-12-31"),
       key: "selection",
     },
   ]);
@@ -31,6 +67,10 @@ const SelectDetails = () => {
     });
   };
 
+  // Initialize AutoSuggest hooks for departure and arrival
+  const departureSuggest = AutoSuggest();
+  const arrivalSuggest = AutoSuggest();
+
   return (
     <>
       <div className="w-full">
@@ -40,18 +80,50 @@ const SelectDetails = () => {
               <img src={departure} alt="departure" />
               <input
                 type="text"
-                placeholder="SFO"
-                className="outline-none cursor-not-allowed border-none ml-2 placeholder:text-[#7C8DB0] placeholder:text-sm placeholder:leading-6"
+                placeholder="From where?"
+                value={departureSuggest.input}
+                onChange={departureSuggest.handleInputChange}
+                onFocus={() => departureSuggest.setIsOpen(true)}
+                className="outline-none border-none ml-2 placeholder:text-[#7C8DB0] text-[#7C8DB0] placeholder:text-sm placeholder:leading-6"
               />
+              { departureSuggest.isOpen && ( 
+           <ul className="w-[220px] h-56 absolute top-[70px]  bg-white rounded overflow-scroll">
+              {departureSuggest.matchingSuggestions.map((suggestion) => (
+                <li
+                  key={suggestion}
+                  onClick={() => departureSuggest.handleSuggestionClick(suggestion)}
+                  className="uppercase cursor-pointer hover:bg-[#605DEC] px-3 py-1 text-[#7C8DB0] hover:text-[#7b7bf0]  mt-1"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+            )}
             </div>
 
             <div className="flex w-full lg:w-[173.92px] h-full justify-start items-center border-[1px] border-[#CBD4E6] p-2">
               <img src={arrival} alt="departure" />
               <input
                 type="text"
-                placeholder="NRT"
-                className="outline-none cursor-not-allowed border-none ml-2 placeholder:text-[#7C8DB0] placeholder:text-sm placeholder:leading-6"
+                placeholder="Where to?"
+                value={arrivalSuggest.input}
+                onChange={arrivalSuggest.handleInputChange}
+                onFocus={() => arrivalSuggest.setIsOpen(true)}
+                className="outline-none border-none ml-2 placeholder:text-[#7C8DB0] text-[#7C8DB0] placeholder:text-sm placeholder:leading-6"
               />
+              { arrivalSuggest.isOpen && (
+            <ul className="w-[220px] h-56 absolute top-[70px] bg-white rounded overflow-scroll">
+              {arrivalSuggest.matchingSuggestions.map((suggestion) => (
+                <li
+                  key={suggestion}
+                  onClick={() => arrivalSuggest.handleSuggestionClick(suggestion)}
+                  className="uppercase cursor-pointer hover:bg-[#605DEC] px-3 py-1 text-[#7C8DB0] hover:text-[#F6F6FE]  mt-1"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+            )}
             </div>
 
             <div className="flex w-full  h-full justify-start items-center border-[1px] border-[#CBD4E6] p-2">
@@ -61,11 +133,8 @@ const SelectDetails = () => {
                 onClick={() => setOpenDate(!openDate)}
               >
                 {openDate
-                  ? `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(
-                      date[0].endDate,
-                      "dd/MM/yyyy"
-                    )}`
-                  : "Depart to Return"}
+                  ? `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate,"dd/MM/yyyy")}`
+                  : `${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate,"dd/MM/yyyy")}`}
               </span>
               {openDate && (
                 <DateRange
@@ -84,7 +153,7 @@ const SelectDetails = () => {
                 className="text-[#7C8DB0] text-sm leading-6 ml-2 cursor-pointer"
                 onClick={() => setOpenOptions(!openOptions)}
               >
-                {`${options.adult} Adult - ${options.minor} Minor `}
+                {`${options.adult} Adult`}
               </span>
               {openOptions && (
                 <div className="w-52 h-fit flex flex-col gap-4 rounded-md bg-white shadowCard absolute lg:top-[70px] top-64 p-4 z-10">
@@ -109,7 +178,7 @@ const SelectDetails = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center">
+                  {/* <div className="flex justify-between items-center">
                     <span className="text-[#7C8DB0] text-base leading-6">
                       Minors:
                     </span>
@@ -129,7 +198,7 @@ const SelectDetails = () => {
                         +
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>
@@ -150,20 +219,11 @@ const SelectDetails = () => {
               className="border-[1px] border-[#CBD4E6] bg-white text-[#27273F] p-1 cursor-pointer"
             >
               <option value="max-price" className="">
-                Max price
+                Price
               </option>
               <option value="$100-300">$100-300</option>
               <option value="$300-600">$300-600</option>
               <option value="$600-1000">$600-1000</option>
-            </select>
-            <select
-              name="shops"
-              id="shops"
-              className="border-[1px] border-[#CBD4E6] bg-white text-[#27273F] p-1 cursor-pointer"
-            >
-              <option value="shops" className="">
-                Shops
-              </option>
             </select>
             <select
               name="times"
@@ -171,7 +231,7 @@ const SelectDetails = () => {
               className="border-[1px] border-[#CBD4E6] bg-white text-[#27273F] p-1 cursor-pointer"
             >
               <option value="times" className="">
-                Times
+                Duration
               </option>
               <option value="7 AM - 4 PM">7 AM - 4 PM</option>
               <option value="8 AM - 12 PM">8 AM - 12 PM</option>
@@ -185,9 +245,9 @@ const SelectDetails = () => {
               <option value="airlines" className="">
                 Airlines
               </option>
-              <option value="Japan">Japan</option>
-              <option value="Hawai">Hawai</option>
-              <option value="Dubai">Dubai</option>
+              <option value="Japan">Air India</option>
+              <option value="Hawai">IndiGo</option>
+              <option value="Dubai">Vistara</option>
             </select>
             <select
               name="class"
@@ -195,13 +255,13 @@ const SelectDetails = () => {
               className="border-[1px] border-[#CBD4E6] bg-white text-[#27273F] p-1 cursor-pointer"
             >
               <option value="class" className="">
-                Select Class
+                Class
               </option>
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
+              <option value="Economy">Economy</option>
+              <option value="Business">Business</option>
+              <option value="First Class">First Class</option>
             </select>
-            <select
+            {/* <select
               name="price"
               id="max-price"
               className="border-[1px] border-[#CBD4E6] bg-white text-[#27273F] p-1 cursor-pointer"
@@ -209,7 +269,7 @@ const SelectDetails = () => {
               <option value="max-price" className="">
                 more
               </option>
-            </select>
+            </select> */}
           </div>
         </div>
       </div>

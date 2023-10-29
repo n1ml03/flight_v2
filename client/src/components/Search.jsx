@@ -195,27 +195,6 @@ const Search = () => {
                     </button>
                   </div>
                 </div>
-                {/* <div className="flex justify-between items-center">
-                  <span className="text-[#7C8DB0] text-base leading-6">
-                    Minors:
-                  </span>
-                  <div className="flex items-center gap-4">
-                    <button
-                      className="border-2 border-[#605DEC] px-2 text-[#7C8DB0] disabled:cursor-not-allowed"
-                      onClick={() => handleOptions("minor", "d")}
-                      disabled={options.minor <= 0}
-                    >
-                      -
-                    </button>
-                    <span className="text-[#7C8DB0]">{options.minor}</span>
-                    <button
-                      className="border-2 border-[#605DEC] px-2 text-[#7C8DB0]"
-                      onClick={() => handleOptions("minor", "i")}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div> */}
               </div>
             )}
           </div>

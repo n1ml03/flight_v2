@@ -18,7 +18,7 @@ const Footer = () => {
           <li className="footerLi">Press</li>
           <li className="footerLi">Forum</li>
         </ul>
-        {/* <ul className="flex flex-col items-start justify-start gap-3 ">
+        <ul className="flex flex-col items-start justify-start gap-3 ">
           <h2 className="text-[#6E7491] font-bold text-lg">Partner with us</h2>
           <li className="footerLi">Partnership programs</li>
           <li className="footerLi">Affiliate program</li>
@@ -27,7 +27,7 @@ const Footer = () => {
           <li className="footerLi">Integrations</li>
           <li className="footerLi">Community</li>
           <li className="footerLi">Loyalty program</li>
-        </ul> */}
+        </ul>
         <ul className="flex flex-col items-start justify-start gap-3">
           <h2 className="text-[#6E7491] font-bold text-lg">Support</h2>
           <li className="footerLi">Help Center</li>
